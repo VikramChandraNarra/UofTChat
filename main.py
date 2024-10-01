@@ -5,6 +5,7 @@ from sentence_transformers import SentenceTransformer, util
 import faiss
 import numpy as np
 from flask import Flask, request, jsonify
+import os
 
 # Step 1: Fetch and parse the webpage (this part is adapted from your original script)
 url = "https://artsci.calendar.utoronto.ca/section/Computer-Science"
@@ -41,7 +42,7 @@ if current_heading and paragraphs:
 df = pd.DataFrame(data)
 
 # Step 4: Initialize the SentenceTransformer model for embedding
-model = SentenceTransformer('all-MiniLM-L6-v2')
+model = SentenceTransformer('distilbert-base-nli-stsb-mean-tokens')
 
 # Step 5: Create embeddings for the paragraphs
 corpus = df['paragraphs'].tolist()
@@ -79,4 +80,5 @@ def chat():
 
 # Step 9: Run the Flask app
 if __name__ == "__main__":
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
